@@ -2,6 +2,9 @@
 
 {% block content %}
 <h1>Groups</h1>
+
+{% include 'partials/_alerts.html' %}
+
 <table>
   <tr>
     <th>ID</th>
@@ -19,8 +22,8 @@
       {% endif %}
       </td>
     <td>
-      <a href="{% url 'group_edit' group.pk %}" class="btn btn-outline-success" type="submit">Edit</a>
-      <a href="{% url 'group_delete' group.pk %}" class="ml-2 btn btn-outline-danger">Delete</a>
+      <a href="{% url 'group_edit' group.pk %}" class="btn btn-success" type="submit">Edit</a>
+      <a href="{% url 'group_delete' group.pk %}" class="ml-2 btn btn-danger">Delete</a>
     </td>
   </tr>
   {% endfor %}

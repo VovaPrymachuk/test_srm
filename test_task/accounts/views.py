@@ -1,23 +1,22 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User, Group
 from django.views.generic import View
+from django.views.generic.list import ListView
+from django.contrib import messages
 
 from.forms import UserCreateForm, UserEditForm, GroupCreateForm, GroupEditForm
 
 
-def users(request):
-    context = {
-        'users': User.objects.all(),
-        'groups': Group.objects.all(),
-    }
-    return render(request, 'accounts/users.html', context)
+class UsersView(ListView):
+    model = User
+    context_object_name = 'users'
+    template_name = 'accounts/users.html'
 
 
-def groups(request):
-    context = {
-        'groups': Group.objects.all(),
-    }
-    return render(request, 'accounts/groups.html', context)
+class GroupsView(ListView):
+    model = Group
+    context_object_name = 'groups'
+    template_name = 'accounts/groups.html'
 
 
 class UserCreate(View):
@@ -29,11 +28,18 @@ class UserCreate(View):
 
     def post(self, request):
         if User.objects.filter(username=request.POST['username']).exists():
+            messages.error(
+                request, 'A user with this username has already been created')
             return redirect('user_create')
         form = UserCreateForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'User created successfully')
             return redirect('users')
+        else:
+            messages.error(
+                request, 'Usernames may contain alphanumeric, _, @, +, . and - characters.')
+            return redirect('user_create')
 
 
 class UserEdit(View):
@@ -50,6 +56,9 @@ class UserEdit(View):
         form = UserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            messages.success(request, 'User updated successfully')
+        else:
+            messages.error(request, 'Error updating user profile')
         return redirect('users')
 
 
@@ -64,6 +73,7 @@ class UserDelete(View):
     def post(self, request, pk):
         user = User.objects.get(pk=pk)
         user.delete()
+        messages.success(request, 'User deleted successfully')
         return redirect('users')
 
 
@@ -76,11 +86,14 @@ class GroupCreate(View):
 
     def post(self, request):
         if Group.objects.filter(name=request.POST['name']).exists():
+            messages.error(
+                request, 'A group with this name has already been created')
             return redirect('group_create')
         form = GroupCreateForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect('groups')
+            messages.success(request, 'Group created successfully')
+            return redirect('groups')
 
 
 class GroupEdit(View):
@@ -97,7 +110,10 @@ class GroupEdit(View):
         form = GroupEditForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return redirect('groups')
+            messages.success(request, 'Group updated successfully')
+        else:
+            messages.error(request, 'Error updating group')
+        return redirect('groups')
 
 
 class GroupDelete(View):
@@ -112,5 +128,8 @@ class GroupDelete(View):
         group = Group.objects.get(pk=pk)
         if len(group.user_set.all()) == 0:
             group.delete()
+            messages.success(request, 'Group deleted successfully')
+        else:
+            messages.error(request, 'You cannot delete this group because it has users')
 
         return redirect('groups')
