@@ -1,21 +1,26 @@
-{% extends 'base.html' %}
-
-{% load bootstrap3 %}
-
-{% block content %}
-
-<h1>Create User</h1>
-
-{% include 'partials/_alerts.html' %}
-
-<form action="" method="POST">
+<form method="post" action="">
   {% csrf_token %}
-  <div class="mb-3">
-    {% bootstrap_form form layout='inline' %}
+  <div class="modal-header">
+    <h5 class="modal-title">Create new User</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close">
+    </button>
+    </button>
   </div>
-  <div class="d-grid gap-2">
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+  <div class="modal-body">
+    {% for field in form %}
+    <div class="form-group{% if field.errors %} invalid{% endif %}">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% for error in field.errors %}
+      <p class="mt-2  alert alert-danger help-block" role="alert">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary">Create</button>
   </div>
 </form>
-
-{% endblock %}

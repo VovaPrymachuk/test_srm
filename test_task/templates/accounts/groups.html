@@ -18,9 +18,9 @@
     <td>{{ group.name }}</td>
     <td>
       {% if group.description %}
-        {{ group.description }}
+      {{ group.description }}
       {% endif %}
-      </td>
+    </td>
     <td>
       <a href="{% url 'group_edit' group.pk %}" class="btn btn-success" type="submit">Edit</a>
       <a href="{% url 'group_delete' group.pk %}" class="ml-2 btn btn-danger">Delete</a>
@@ -28,10 +28,25 @@
   </tr>
   {% endfor %}
 </table>
-<form action="{% url 'group_create' %}" method="GET">
-  <div class="mt-3 d-grid gap-2">
-    <button class="btn btn btn-success" type="submit">Add Group</button>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
   </div>
-</form>
+</div>
+
+<div class="mt-3 d-grid gap-2">
+  <button id="create-group" class="btn btn-primary" type="button" name="button">Create Group</button>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+
+    $("#create-group").modalForm({
+      formURL: "{% url 'group_create' %}"
+    });
+
+  });
+</script>
 
 {% endblock %}

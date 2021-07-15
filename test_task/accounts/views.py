@@ -2,6 +2,8 @@ from .utils import ObjectCreateMixin, ObjectDeleteMixin, ObjectUpdateMixin
 from django.contrib.auth.models import User, Group
 from django.views.generic import View
 from django.views.generic.list import ListView
+from bootstrap_modal_forms.generic import BSModalCreateView
+from django.urls import reverse_lazy
 
 from.forms import UserCreateForm, UserEditForm, GroupCreateForm, GroupEditForm
 
@@ -18,14 +20,11 @@ class GroupsView(ListView):
     template_name = 'accounts/groups.html'
 
 
-class UserCreate(ObjectCreateMixin, View):
-    model = User
-    form_model = UserCreateForm
-    template = 'accounts/user_create.html'
-    success_redirect_url = 'users'
-    error_redirect_url = 'user_create'
-    objects_already_create_error = 'A user with this username has already been created'
-    not_valid_form_message = 'Usernames may contain alphanumeric, _, @, +, . and - characters.'
+class UserCreate(BSModalCreateView):
+    template_name = 'accounts/user_create.html'
+    form_class = UserCreateForm
+    success_message = 'User was created.'
+    success_url = reverse_lazy('users')
 
 
 class UserEdit(ObjectUpdateMixin, View):
@@ -41,13 +40,19 @@ class UserDelete(ObjectDeleteMixin, View):
     redirect_url = 'users'
 
 
-class GroupCreate(ObjectCreateMixin, View):
-    model = Group
-    form_model = GroupCreateForm
-    template = 'accounts/group_create.html'
-    success_redirect_url = 'groups'
-    error_redirect_url = 'group_create'
-    objects_already_create_error = 'A group with this name has already been created'
+class GroupCreate(BSModalCreateView):
+    template_name = 'accounts/group_create.html'
+    form_class = GroupCreateForm
+    success_message = 'Group was created.'
+    success_url = reverse_lazy('groups')
+
+# class GroupCreate(ObjectCreateMixin, View):
+#     model = Group
+#     form_model = GroupCreateForm
+#     template = 'accounts/group_create.html'
+#     success_redirect_url = 'groups'
+#     error_redirect_url = 'group_create'
+#     objects_already_create_error = 'A group with this name has already been created'
 
 
 class GroupEdit(ObjectUpdateMixin, View):
