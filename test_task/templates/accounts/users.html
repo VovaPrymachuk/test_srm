@@ -25,7 +25,8 @@
       {% endfor %}
     </td>
     <td>
-      <a href="{% url 'user_edit' user.pk %}" class="btn btn-success" type="submit">Edit</a>
+      <button class="update-user bs-modal btn btn-success" type="button"
+        data-form-url="{% url 'user_edit' user.pk %}">Edit</button>
       <a href="{% url 'user_delete' user.pk %}" class="ml-2 btn btn-danger">Delete</a>
     </td>
   </tr>
@@ -42,14 +43,18 @@
   <button id="create-user" class="btn btn-primary" type="button" name="button">Create User</button>
 </div>
 
+
 <script type="text/javascript">
-  $(document).ready(function() {
-  
-      $("#create-user").modalForm({
-          formURL: "{% url 'user_create' %}"
-      });
-  
+  $(document).ready(function () {
+
+    $("#create-user").modalForm({
+      formURL: "{% url 'user_create' %}"
+    });
+
+    $(".update-user").each(function () {
+      $(this).modalForm({ formURL: $(this).data("form-url") });
+    });
   });
-  </script>
+</script>
 
 {% endblock %}

@@ -22,7 +22,7 @@
       {% endif %}
     </td>
     <td>
-      <a href="{% url 'group_edit' group.pk %}" class="btn btn-success" type="submit">Edit</a>
+      <button class="update-group bs-modal btn btn-success" type="button" data-form-url="{% url 'group_edit' group.pk %}">Edit</button>
       <a href="{% url 'group_delete' group.pk %}" class="ml-2 btn btn-danger">Delete</a>
     </td>
   </tr>
@@ -39,6 +39,7 @@
   <button id="create-group" class="btn btn-primary" type="button" name="button">Create Group</button>
 </div>
 
+
 <script type="text/javascript">
   $(document).ready(function () {
 
@@ -46,7 +47,10 @@
       formURL: "{% url 'group_create' %}"
     });
 
+    $(".update-group").each(function () {
+      $(this).modalForm({formURL: $(this).data("form-url")});
   });
+});
 </script>
 
 {% endblock %}
