@@ -72,7 +72,7 @@ class ObjectDeleteMixin:
     def get(self, request, pk):
         object = self.model.objects.get(pk=pk)
         context = {
-            self.model.__name__: object
+            'obj': object
         }
         return render(request, self.template, context)
 

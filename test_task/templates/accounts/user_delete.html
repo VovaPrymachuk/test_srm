@@ -5,7 +5,7 @@
 <form action="" method="POST">
   {% csrf_token %}
   <div class="mb-3 text-center">
-    <h2>Are you realy want to delete group: {{ user.username }}</h2>
+    <h2>Are you realy want to delete group: {{ obj.username }}</h2>
     <a class="btn btn-outline-primary" href="{% url 'users' %}">Cancel</a>
     <button type="submit" name="button" class="btn btn-outline-danger">Delete</button>
   </div>
